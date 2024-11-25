@@ -3,6 +3,7 @@ import aiohttp
 import time
 import uuid
 import re
+import random
 from fake_useragent import UserAgent
 import pyfiglet
 from loguru import logger
@@ -140,16 +141,19 @@ async def send_ping(proxy, token):
     last_ping_time[proxy] = time.time()
 
     try:
+        # Select a random API endpoint
+        ping_url = random.choice(DOMAIN_API_ENDPOINTS["PING"])
+
         data = {
             "id": account_info.get("uid"),
             "browser_id": browser_id,
             "timestamp": int(time.time())
         }
 
-        response = await send_request(DOMAIN_API_ENDPOINTS["PING"][0], data, proxy, token)
+        response = await send_request(ping_url, data, proxy, token)
         if response["code"] == 0:
             ip_address = "Not Used/Direct" if not proxy else re.search(r'(?<=@)[^:]+', proxy).group()
-            logger.success(f"🟢 Ping: {response.get('msg')}, IP Score: {response['data'].get('ip_score')}, Proxy: {ip_address}")
+            logger.success(f"🟢 Ping: {response.get('msg')} ({ping_url}), IP Score: {response['data'].get('ip_score')}%, Proxy: {ip_address}")
             RETRIES_LIMIT = 0
             status_connect = CONNECTION_STATES["CONNECTED"]
         else:
