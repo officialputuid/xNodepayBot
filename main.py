@@ -44,12 +44,8 @@ RETRIES_LIMIT = 60
 
 # API Endpoints
 DOMAIN_API_ENDPOINTS = {
-    "SESSION": [
-        "https://api.nodepay.ai/api/auth/session"
-    ],
-    "PING": [
-        "http://18.142.29.174/api/network/ping"
-    ]
+    "SESSION": "http://api.nodepay.ai/api/auth/session",
+    "PING": "https://nw2.nodepay.org/api/network/ping"
 }
 
 CONNECTION_STATES = {
